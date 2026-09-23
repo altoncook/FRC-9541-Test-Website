@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Team Data Test</title>
+        <meta name="theme-color" content="##22BBBB">
+        <meta name="description" content>
+        <link rel="icon" href="../assets/logo.png" sizes="32x32">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+
+        <!--navigation-->
+        <nav>
+            <div class="nav-header">
+                <h1>FRC Team Data Test</h1>
+                <a href="../">Main Page</a>
+            </div>
+
+            <div class="nav-search">
+                <input type="search" id="team-search" class="text-input"
+                    name="q" placeholder="Team #" required>
+                <script>
+                    const inputField = document.getElementById('team-search');
+
+                    inputField.addEventListener('keydown', function(event) {
+                        if (event.key === 'Enter' && inputField.value != "") {
+                            const params = new URLSearchParams();
+                            params.append("team", inputField.value);
+                            
+                            const url = `./?${params.toString()}`;
+                            window.history.pushState({ path: url }, '', url);
+                            window.location.href = url;
+                            fetchAPIData();
+                        }
+                    });
+                </script>
+            </div>
+
+        </nav>
+
+        <!--Main Website-->
+        <div class="main">
+            <div class="left-side" id="frc-team">
+
+            </div>
+            <div class="sidebar">
+                <a>Team Info</a>
+
+            </div>
+            <script>
+                async function fetchAPIData() {
+                    const queryString = window.location.search;
+
+                    const urlParams = new URLSearchParams(queryString);
+
+                    let value = urlParams.get('team')
+
+                    console.log(value)
+
+                    try {
+    const response = await fetch(`./build/frc-team-data/teams.json`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    const header = document.getElementById("frc-team");
+
+    const teamData = data.find(team => team.teamNumber === +value)
+
+    if (teamData) {
+        header.innerHTML = `
+        <h2>Team #${value} - ${teamData.nameShort}</h2>
+        <p>Full Name - ${teamData.nameFull}</p>
+        <p>Location - ${teamData.city}, ${teamData.stateProv}, ${teamData.country}</p>
+        <p>Rookie Year - ${teamData.rookieYear}</p>
+        <p>School - ${teamData.schoolName}</p>
+        <p>District - ${teamData.districtCode}</p>
+        <p><a href="https://www.thebluealliance.com/team/${teamData.teamNumber}">Blue Alliance Link</a></p>
+        <p><a href="https://frc-events.firstinspires.org/team/${teamData.teamNumber}">FIRST Inspires Link</a></p>
+        `
+    } else {
+        header.innerHTML = `
+        <h2>Team is either Invalid, Empty or is not included in the FRC API</h2>
+        <p>please make sure your response is of just the team number, eg "9541" </p>
+        `
+    }
+    
+
+  } catch (error) {
+    console.error("Unable to load JSON file:", error);
+  }
+                }
+
+                fetchAPIData()
+            </script>
+        </div>
+
+        <!--Footer-->
+        <footer>
+            <div class="footer-link">
+                <a href="https://www.team9541.com">By Team 9541</a>
+            </div>
+            <div class="footer-link">
+                <a href="https://frc-events.firstinspires.org/services/API">Event Data provided by FIRST</a>
+            </div>
+        </footer>
+    </body>
+</html>

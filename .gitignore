@@ -1,0 +1,10 @@
+.env
+node_modules/
+
+# build files
+*/build/
+
+# ignored files
+*/ignore/
+
+.ds_store
