@@ -85,17 +85,5 @@ function getCredentials(username, password) {
     return Buffer.from(`${username}:${password}`).toString('base64');
 }
 
-
-
-// Check terminal arguments
-const targetFunction = process.argv[2];
-
-if (targetFunction === 'downloadAll') {
-    downloadAllFRCData();
-} else if (targetFunction === 'downloadRecent') {
-    downloadRecentFRCData(); 
-} else {
-    console.log("Invalid argument");
-}
-
+downloadAllFRCData();
 
