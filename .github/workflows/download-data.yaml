@@ -28,5 +28,5 @@ jobs:
       - name: Run JavaScript file
         run: node script.js
         env:
-          FRC_USERNAME: ${{ secrets.FRC_USERNAME }}
+          FRC_API_KEY: ${{ secrets.FRC_API_KEY }}
           FRC_USERNAME: ${{ secrets.FRC_USERNAME }}
