@@ -26,7 +26,7 @@ jobs:
 
       # 4. Run the JavaScript file with injected secrets
       - name: Run JavaScript file
-        run: node script.js
+        run: node team-data-test/script/update_data.js
         env:
           FRC_API_KEY: ${{ secrets.FRC_API_KEY }}
           FRC_USERNAME: ${{ secrets.FRC_USERNAME }}
