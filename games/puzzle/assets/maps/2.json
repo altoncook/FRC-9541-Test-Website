@@ -1,0 +1,15 @@
+{
+    "data_format": "0.1",
+    "title": "Something",
+    "description": "Something that may be a little longer",
+    "map": {
+        "width": 8,
+        "height": 8,
+        "data": "-------- -----x-- -----x-- --h----- -w--xxxx ----xxxx -w--xxxx hhhhxxxx",
+        "box-data": "-------- --bb---- --bb---- -------- -------- -------- -------- --------"
+    },
+    "player": {
+        "x": 3,
+        "y": 3
+    }
+}

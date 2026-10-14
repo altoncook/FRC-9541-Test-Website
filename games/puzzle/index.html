@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Unnamed Puzzle Game</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="../../assets/logo.png">
+        <link rel="stylesheet" href="style.css">
+
+    </head>
+    <body>
+        <header>
+            <h1>puzzle game</h1>
+        </header>
+        <main>
+            
+            <div class="middle-aligned">
+                <div class="game-holder">
+                    <canvas id="game" width="256" height="256"></canvas>
+                </div>
+            </div>
+            
+            <div class="right-aligned">
+                <a href="https://team9541.com">
+                    <button type="button" class="side-button" id="home-button" title="Home page" >
+                        <img src="assets/textures/icon/home.png" alt="home button"  height="48px">
+                    </button>
+                </a>
+                <button type="button" class="side-button" id="reset-button" title="Reset map" style="background: none; border: none; padding: 0; cursor: pointer;">
+                    <img src="assets/textures/icon/reset.png" alt="reset button" height="48px">
+                </button>
+                <button type="button" class="side-button" id="undo-button" title="Undo" >
+                    <img src="assets/textures/icon/undo.png" alt="home button"  height="48px">
+                </button>
+                <a href="./edit">
+                    <button type="button" class="side-button" id="edit-button" title="Edit your own map" >
+                        <img src="assets/textures/icon/edit.png" alt="edit button"  height="48px">
+                    </button>
+                </a>
+            </div>
+        </main>
+
+    <script src="main.js" type="module"></script>
+    </body>
+</html>

@@ -1,0 +1,16 @@
+{
+    "data_format": "0.1",
+    "title": "round 2",
+    "description": "Something that may be a little longer",
+    "map": {
+        "width": 8,
+        "height": 8,
+        "data": "-------- -------- -------- --t----- -------- -------- --hh---- --hh----",
+        "boxdata": "-------- --b----- --bb---- ----b--- -------- -d------ -------- --------",
+        "holeamount": 4
+    },
+    "player": {
+        "x": 3,
+        "y": 3
+    }
+}
