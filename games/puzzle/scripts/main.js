@@ -1,4 +1,5 @@
-import mapData from './assets/maps/d.json' with { type: 'json' };
+import mapData from '../assets/maps/d.json' with { type: 'json' };
+import { Game2D } from './game.js';
 
 class GameMap {
     constructor(width, height, grid, boxGrid, holeAmount) {
@@ -64,8 +65,8 @@ undoButton.addEventListener('click', () => {
 
 // -- end --
 
-const canvas = document.getElementById('game');
-const ctx = canvas.getContext('2d');
+const game = new Game2D(document.getElementById('game'), TICK_TIME);
+
 
 atlasImg.onload = function () {
     isAtlasLoaded = true;
@@ -77,21 +78,10 @@ const jsonPlayer = getPlayerDataFromJson(mapData);
 let gameMap = structuredClone(jsonGameMap);
 let player = structuredClone(jsonPlayer);;
 
-canvas.width = gameMap.width * 16;
-canvas.height = gameMap.height * 16 + 16;
+game.canvas.width = gameMap.width * 16;
+game.canvas.height = gameMap.height * 16 + 16;
 
 let winState;
-
-
-function initGame() {
-    gameMap = structuredClone(jsonGameMap);
-    player = structuredClone(jsonPlayer);
-
-    winState = false;
-    alpha = 0.0;
-
-    requestAnimationFrame(gameLoop);
-}
 
 function getGameMapFromJson(mapData) {
     const width = mapData.map.width;
@@ -125,57 +115,20 @@ function getPlayerDataFromJson(mapData) {
     return new Player(mapData.player.x, mapData.player.y);
 }
 
-function drawTexture(tileIndexX, tileIndexY, gridX, gridY) {
-    if (!isAtlasLoaded) return;
+// ran during init
+game.start = () => {
+    gameMap = structuredClone(jsonGameMap);
+    player = structuredClone(jsonPlayer);
 
-    const sourceX = tileIndexX * 16;
-    const sourceY = tileIndexY * 16;
-    const sourceWidth = 16;
-    const sourceHeight = 16;
+    winState = false;
+    alpha = 0.0;
 
-    const destX = gridX * 16;
-    const destY = gridY * 16 + 16;
-    const destWidth = 16;
-    const destHeight = 16;
-
-    ctx.drawImage(
-        atlasImg,
-        sourceX, sourceY, sourceWidth, sourceHeight,
-        destX, destY, destWidth, destHeight
-    );
-}
-
-let lastTime = 0;
-let accumulator = 0;
-
-function gameLoop(timestamp) {
-    if (resetFlag) {
-        resetFlag = false;
-        initGame();
-        return;
-    }
-
-    if (!lastTime) lastTime = timestamp;
-    let frameTime = timestamp - lastTime;
-    lastTime = timestamp;
-
-    if (frameTime > 250) frameTime = 250;
-
-    accumulator += frameTime;
-
-    while (accumulator >= TICK_TIME) {
-        update();
-        accumulator -= TICK_TIME;
-    }
-
-    render();
-
-    requestAnimationFrame(gameLoop);
 }
 
 
-function update() {
 
+// runs 20 times a second, should be used for game processing
+game.tick = () => {
     // if there is a movement input run movement
     if (bufferedInput) {
         let dx = 0;
@@ -244,7 +197,6 @@ function moveBox(gridX, gridY, dx, dy) {
             gameMap.boxGrid[goalX][goalY] = PIECE_TYPES.BOX;
             return true;
         }
-
     }
 
 
@@ -272,25 +224,18 @@ function isBoxAtSpace(gridX, gridY) {
     return gameMap.boxGrid[gridX][gridY] === 'b';
 }
 
-function render() {
-    ctx.reset();
+// ran as much as possable, for rendering images and textures
+game.render = () => {
+    game.ctx.reset();
     drawFromMap();
 
 
     if (winState === true) {
         drawWin();
     }
-
-    drawUI();
-}
-
-function drawUI() {
-
 }
 
 function drawFromMap() {
-
-
     for (let x = 0; x < gameMap.width; x++) {
         for (let y = 0; y < gameMap.height; y++) {
             let tx;
@@ -336,9 +281,9 @@ const winImage = new Image;
 winImage.src = 'assets/textures/win1.png'
 
 function drawWin() {
-    ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
-    ctx.globalCompositeOperation = 'source-atop';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    game.ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
+    game.ctx.globalCompositeOperation = 'source-atop';
+    game.ctx.fillRect(0, 0, game.canvas.width, game.canvas.height);
 
 
     if (alpha < 0.7) {
@@ -346,10 +291,29 @@ function drawWin() {
         if (alpha > 0.7) alpha = 0.7;
     }
 
-    ctx.drawImage(winImage, 1, 17);
+    game.ctx.drawImage(winImage, 1, 17);
 
-    ctx.restore();
+    game.ctx.restore();
 }
 
-initGame();
+function drawTexture(tileIndexX, tileIndexY, gridX, gridY) {
+    if (!isAtlasLoaded) return;
 
+    const sourceX = tileIndexX * 16;
+    const sourceY = tileIndexY * 16;
+    const sourceWidth = 16;
+    const sourceHeight = 16;
+
+    const destX = gridX * 16;
+    const destY = gridY * 16 + 16;
+    const destWidth = 16;
+    const destHeight = 16;
+
+    game.ctx.drawImage(
+        atlasImg,
+        sourceX, sourceY, sourceWidth, sourceHeight,
+        destX, destY, destWidth, destHeight
+    );
+}
+
+game.init();
